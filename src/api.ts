@@ -158,16 +158,25 @@ export const customProvider: DataProvider = {
       );
       return { data };
     } catch (error) {
-      console.error(`Error creating new ${resource}:`, error);
+      console.error(`Error creating ${resource}:`, error);
       throw error;
     }
   },
 
   delete: async (resource, params) => {
-    return baseDataProvider.delete(resource, params);
-  },
-
-  deleteMany: async (resource, params) => {
-    return baseDataProvider.deleteMany(resource, params);
+    try {
+      const response = await fetchUtils.fetchJson(
+        `${API_URL}/${resource}/${params.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      return { data: response.json };
+    } catch (error) {
+      console.error(`Error deleting ${resource} with id ${params.id}:`, error);
+      throw error;
+    }
   },
 };
+
+export default customProvider;
