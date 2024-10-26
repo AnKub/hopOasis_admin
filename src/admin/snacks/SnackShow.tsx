@@ -26,8 +26,8 @@ export const SnackShow = (props: ShowProps) => (
                 <TextField source="description" className="list-common" />
             </TabbedShowLayout.Tab>
             <TabbedShowLayout.Tab label="Images" className="list-common">
-                <ImageField source="snackImageName" label="Image" className="list-common-image" />
-            </TabbedShowLayout.Tab>
-        </TabbedShowLayout>
-    </Show>
+				<ImageField source="snackImageName[0]" label="Image Option 1" className="list-common-image" />
+			</TabbedShowLayout.Tab>
+		</TabbedShowLayout>
+	</Show>
 );

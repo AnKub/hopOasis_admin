@@ -1,8 +1,9 @@
 import { Layout, LayoutProps } from 'react-admin';
-import CustomAppBar from './CustomAppBar'; 
+import CustomAppBar from './CustomAppBar';
+import { memo } from 'react';
 
-const CustomLayout = (props: LayoutProps) => (
+const CustomLayout = memo((props: LayoutProps) => (
     <Layout {...props} appBar={CustomAppBar} />
-);
+));
 
 export default CustomLayout;

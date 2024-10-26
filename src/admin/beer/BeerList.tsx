@@ -25,7 +25,7 @@ export const BeerList = (props: ListProps) => (
                 className="list-common-image" 
                />
             {/* Работа с массивом options */}
-            <TextField
+            <NumberField
                 source="options[0].volume"
                 label="Volume Large"
                 className="list-common"

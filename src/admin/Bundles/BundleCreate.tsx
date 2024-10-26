@@ -6,6 +6,7 @@ import {
 	TextInput,
 	required,
 	CreateProps,
+	NumberInput,
 } from "react-admin";
 import { ProductBundleParams } from "../../types";
 
@@ -16,11 +17,12 @@ export const BundleCreate = (props: CreateProps) => (
 							<TextInput source="name" label="Name" validate={[required()]} className="list-common" />
 					</TabbedForm.Tab>
 					<TabbedForm.Tab label="Options" className="list-common">
-							<TextInput source="options[0]?.price" label="Price Option 1" validate={[required()]} className="list-common" />
-							<TextInput source="options[0]?.quantity" label="Quantity Option 1" validate={[required()]} className="list-common" />
-							<TextInput source="options[1]?.price" label="Price Option 2" validate={[required()]} className="list-common" />
-							<TextInput source="options[1]?.quantity" label="Quantity Option 2" validate={[required()]} className="list-common" />
-					</TabbedForm.Tab>
+					<NumberInput source="options[0].price" label="Price Option 1" validate={[required()]} className="list-common" />
+					<NumberInput source="options[0].quantity" label="Quantity Option 1" validate={[required()]} className="list-common" />
+					<NumberInput source="options[1].price" label="Price Option 2" validate={[required()]} className="list-common" />
+					<NumberInput source="options[1].quantity" label="Quantity Option 2" validate={[required()]} className="list-common" />
+
+	</TabbedForm.Tab>
 					<TabbedForm.Tab label="Description" className="list-common">
 							<TextInput
 									source="description"

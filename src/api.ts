@@ -4,7 +4,7 @@ import type { RaRecord, Identifier, CreateParams, UpdateParams } from "react-adm
 import type { SnackParams, BeerParams, CiderParams, ProductBundleParams } from "./types";
 import { getImagesUrl, fetchResource } from "./utils";
 
-const API_URL = "https://giou6fh6yg2ogdsh7uzcaobhte0wtwha.lambda-url.eu-central-1.on.aws";
+const API_URL = "https://gfkg3ijokauacf7dkjkvjqqeai0xefka.lambda-url.eu-central-1.on.aws";
 const baseDataProvider = simpleRestDataProvider(API_URL);
 
 export const customProvider: DataProvider = {
@@ -158,16 +158,25 @@ export const customProvider: DataProvider = {
       );
       return { data };
     } catch (error) {
-      console.error(`Error creating new ${resource}:`, error);
+      console.error(`Error creating ${resource}:`, error);
       throw error;
     }
   },
 
   delete: async (resource, params) => {
-    return baseDataProvider.delete(resource, params);
-  },
-
-  deleteMany: async (resource, params) => {
-    return baseDataProvider.deleteMany(resource, params);
+    try {
+      const response = await fetchUtils.fetchJson(
+        `${API_URL}/${resource}/${params.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      return { data: response.json };
+    } catch (error) {
+      console.error(`Error deleting ${resource} with id ${params.id}:`, error);
+      throw error;
+    }
   },
 };
+
+export default customProvider;

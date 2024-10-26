@@ -25,6 +25,7 @@ export const BeerEdit = (props: EditProps) => (
 									multiline
 									fullWidth
 									className="list-common"
+									id="beer-name-input"
 							/>
 					</TabbedForm.Tab>
 			</TabbedForm>
