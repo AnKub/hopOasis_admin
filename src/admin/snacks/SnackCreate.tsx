@@ -3,6 +3,7 @@ import {
     ImageField,
     ImageInput,
     TabbedForm,
+    NumberInput,
     TextInput,
     required,
     CreateProps,
@@ -16,10 +17,10 @@ export const SnackCreate = (props: CreateProps) => (
                 <TextInput source="snackName" label="Name" validate={[required()]} className="list-common" />
             </TabbedForm.Tab>
             <TabbedForm.Tab label="Price and Weight" className="list-common">
-                <TextInput source="options[0]?.price" label="Price Option 1" validate={[required()]} className="list-common" />
-                <TextInput source="options[0]?.weight" label="Weight Option 1" validate={[required()]} className="list-common" />
-                <TextInput source="options[1]?.price" label="Price Option 2" validate={[required()]} className="list-common" />
-                <TextInput source="options[1]?.weight" label="Weight Option 2" validate={[required()]} className="list-common" />
+                <NumberInput source="options[0]?.price" label="Price Option 1" validate={[required()]} className="list-common" />
+                <NumberInput source="options[0]?.weight" label="Weight Option 1" validate={[required()]} className="list-common" />
+                <NumberInput source="options[1]?.price" label="Price Option 2" validate={[required()]} className="list-common" />
+                <NumberInput source="options[1]?.weight" label="Weight Option 2" validate={[required()]} className="list-common" />
             </TabbedForm.Tab>
             <TabbedForm.Tab label="Description" className="list-common">
                 <TextInput

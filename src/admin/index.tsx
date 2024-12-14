@@ -1,9 +1,14 @@
+import { lazy } from "react";
 import { Admin, Resource, CustomRoutes } from "react-admin";
 import { Route } from "react-router-dom";
-import { customProvider } from "../api";
-import { lazy } from 'react';
+import authProvider from "../ShieldAuth/authProvider";
+import customProvider from "../api";
+import CustomLayout from "../components/CustomLayout";
+import LoginPage from "./LoginPage/LoginPage";
+// import { Suspense } from 'react';
 
-// Ленивые импорты компонентов
+import './StylesAdmin.css';
+
 const BeerList = lazy(() => import('./Beer/BeerList').then(module => ({ default: module.BeerList })));
 const BeerCreate = lazy(() => import('./Beer/BeerCreate').then(module => ({ default: module.BeerCreate })));
 const BeerEdit = lazy(() => import('./Beer/BeerEdit').then(module => ({ default: module.BeerEdit })));
@@ -31,53 +36,23 @@ const BundleShow = lazy(() => import('./Bundles/BundleShow').then(module => ({ d
 
 const ButtonGroup = lazy(() => import('../components/Button').then(module => ({ default: module.ButtonGroup })));
 
-import CustomLayout from "../components/CustomLayout"; 
-import './StylesAdmin.css';
 
 const MyAdmin = () => (
-    <Admin dataProvider={customProvider} layout={CustomLayout}>
-        <Resource
-            name="beers"
-            list={BeerList}
-            show={BeerShow}
-            edit={BeerEdit}
-            create={BeerCreate}
-            options={{ label: 'Beers' }}
-        />
-        <Resource
-            name="snacks"
-            list={SnackList}
-            show={SnackShow}
-            edit={SnackEdit}
-            create={SnackCreate}
-            options={{ label: 'Snacks' }}
-        />
-        <Resource
-            name="ciders"
-            list={CiderList}
-            show={CiderShow}
-            edit={CiderEdit}
-            create={CiderCreate}
-            options={{ label: 'Ciders' }}
-        />
-        <Resource
-            name="special-offers"
-            list={OfferList}
-            show={OfferShow}
-            edit={OfferEdit}
-            create={OfferCreate}
-            options={{ label: 'Special Offers' }}
-        />
-        <Resource
-            name="products-bundle"
-            list={BundleList}
-            show={BundleShow}
-            edit={BundleEdit}
-            create={BundleCreate}
-            options={{ label: 'Products Bundle' }}
-        />
+    <Admin
+        authProvider={authProvider}
+        dataProvider={customProvider}
+        layout={CustomLayout}
+        loginPage={(props) => <LoginPage {...props} onLoginSuccess={() => console.log('Login success!')} />}
+    >
+        <Resource name="beers" list={BeerList} show={BeerShow} edit={BeerEdit} create={BeerCreate} options={{ label: 'Beers' }} />
+        <Resource name="snacks" list={SnackList} show={SnackShow} edit={SnackEdit} create={SnackCreate} options={{ label: 'Snacks' }} />
+        <Resource name="ciders" list={CiderList} show={CiderShow} edit={CiderEdit} create={CiderCreate} options={{ label: 'Ciders' }} />
+        <Resource name="special-offers" list={OfferList} show={OfferShow} edit={OfferEdit} create={OfferCreate} options={{ label: 'Special Offers' }} />
+        <Resource name="products-bundle" list={BundleList} show={BundleShow} edit={BundleEdit} create={BundleCreate} options={{ label: 'Products Bundle' }} />
+        
         <CustomRoutes>
             <Route path="buttons" element={<ButtonGroup />} />
+            <Route path="/login" element={<LoginPage onLoginSuccess={() => console.log('Login success!')} />} />
         </CustomRoutes>
     </Admin>
 );

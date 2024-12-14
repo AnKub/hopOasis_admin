@@ -3,7 +3,8 @@ import { Button, CircularProgress, Toolbar, Typography } from "@mui/material";
 import { useState, useCallback } from "react";
 import axios from "axios";
 
-const REVALIDATE_URL = "https://hop-oasis-fr.vercel.app/api/revalidate/main";
+// Новый URL для ревалидации
+const REVALIDATE_URL = "https://friendly-feynma-1-0.onrender.com/api/revalidate/main";
 
 const labels: { [key: string]: string } = {
     'beers': 'Beers',
@@ -18,10 +19,19 @@ const CustomAppBar = (props: AppBarProps) => {
 
     const revalidateData = useCallback(async () => {
         try {
-            const response = await axios.get(REVALIDATE_URL);
-            console.log(response.data);
+            const response = await axios.get(REVALIDATE_URL, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}` // Токен добавлен
+                }
+            });
+
+            if (response.status === 200) {
+                console.log("Revalidation successful:", response.data);
+            } else {
+                console.warn("Revalidation returned non-200 status:", response.status);
+            }
         } catch (error) {
-            console.error("Error fetching:", error);
+            console.error("Error during revalidation:", error);
         }
     }, []);
 
@@ -39,7 +49,7 @@ const CustomAppBar = (props: AppBarProps) => {
     return (
         <AppBar {...props}>
             <Toolbar className="toolbar-container">
-                <Typography variant="h6" className="toolbar-title">
+                <Typography className="toolbar-title">
                     {getReadableTitle()}
                 </Typography>
                 <div className="toolbar-actions">

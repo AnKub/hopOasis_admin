@@ -1,106 +1,117 @@
 import type { CreateParams, UpdateParams, RaRecord, Identifier } from "react-admin";
-import type { OfferParams, SnackParams, CustomImage } from "./types";
+import type { OfferParams, SnackParams } from "./types";
 
+// // Функція для отримання токену
+// const getAuthToken = (): string | null => {
+//     return localStorage.getItem("authToken");
+// };
+
+// Функція для формування URL для зображень
 export const getImagesUrl = (
-  imagesName: string[],
-  url: string,
-  resource: string,
+    imagesName: string[],
+    url: string,
+    resource: string
 ): string[] => {
-  if (!Array.isArray(imagesName)) {
-    console.error("Expected an array of image names, but received:", imagesName);
-    return [];
-  }
-  return imagesName.map((image) => {
-    if (image.startsWith("http://") || image.startsWith("https://")) {
-      return image;
+    if (!Array.isArray(imagesName)) {
+        console.error("Expected an array of image names, but received:", imagesName);
+        return [];
     }
-    return `${url}/${resource}/images/${image}`;
-  });
+    return imagesName.map((image) => {
+        return image.startsWith("http://") || image.startsWith("https://") 
+            ? image 
+            : `${url}/${resource}/images/${image}`;
+    });
 };
 
+// Створення FormData для пропозиції
 export const createOfferFormData = (params: CreateParams<OfferParams>): FormData => {
-  const formData = new FormData();
-  
-  if (params.data.name) formData.append("name", params.data.name);
-  if (params.data.active !== undefined) formData.append("active", String(params.data.active));
-  
-  if (params.data.specialOfferBeers) {
-    formData.append("specialOfferBeers", JSON.stringify(params.data.specialOfferBeers));
-  }
-  
-  if (params.data.specialOfferCiders) {
-    formData.append("specialOfferCiders", JSON.stringify(params.data.specialOfferCiders));
-  }
-  
-  if (params.data.specialOfferSnacks) {
-    formData.append("specialOfferSnacks", JSON.stringify(params.data.specialOfferSnacks));
-  }
-  
-  if (params.data.specialOfferProductBundles) {
-    formData.append("specialOfferProductBundles", JSON.stringify(params.data.specialOfferProductBundles));
-  }
-  
-  return formData;
+    const formData = new FormData();
+    Object.entries(params.data).forEach(([key, value]) => {
+        if (value !== undefined) formData.append(key, JSON.stringify(value));
+    });
+    return formData;
 };
 
+// Створення FormData для перекусів
 export const createSnackFormData = (params: CreateParams<SnackParams>): FormData => {
-  const formData = new FormData();
-  
-  if (params.data.snackName) formData.append("snackName", params.data.snackName);
-  if (params.data.description) formData.append("description", params.data.description);
-  if (params.data.averageRating !== undefined) formData.append("averageRating", String(params.data.averageRating));
-  if (params.data.ratingCount !== undefined) formData.append("ratingCount", String(params.data.ratingCount));
-
-  if (params.data.options && Array.isArray(params.data.options)) {
-    params.data.options.forEach((option) => {
-      if (option.weight !== undefined) formData.append("weight", String(option.weight));
-      if (option.price !== undefined) formData.append("price", String(option.price));
-      if (option.quantity !== undefined) formData.append("quantity", String(option.quantity));
+    const formData = new FormData();
+    Object.entries(params.data).forEach(([key, value]) => {
+        if (value !== undefined) formData.append(key, String(value));
     });
-  }
-
-  if (params.data.snackImageName && Array.isArray(params.data.snackImageName)) {
-    params.data.snackImageName.forEach((image: CustomImage) => {
-      formData.append("image[]", image);
-    });
-  }
-
-  return formData;
+    return formData;
 };
 
+// Функція для виконання запитів до ресурсів
 export const fetchResource = async <T extends RaRecord<Identifier>>(
-  API_URL: string,
-  resource: string,
-  method: 'POST' | 'PUT',
-  params?: UpdateParams<T> | CreateParams<T>
+    API_URL: string,
+    resource: string,
+    method: 'POST' | 'PUT',
+    params?: UpdateParams<T> | CreateParams<T>,
+    isFormData: boolean = false
 ): Promise<T> => {
-  const url = `${API_URL}/${resource}${params && 'id' in params ? `/${params.id}` : ''}`;
-  
-  const body = params
-    ? resource === "special-offers"
-      ? createOfferFormData(params as CreateParams<OfferParams>)
-      : createSnackFormData(params as CreateParams<SnackParams>)
-    : undefined;
+    const authToken = localStorage.getItem("authToken");
 
-  const response = await fetch(url, {
-    method,
-    body,
-  });
+    if (!authToken) {
+        throw new Error("Authentication token is missing.");
+    }
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error(`Failed to ${method.toLowerCase()} ${resource}. Response:`, errorText);
-    throw new Error(`Failed to ${method.toLowerCase()} ${resource}`);
-  }
+    const url = `${API_URL}/${resource}${params && 'id' in params ? `/${params.id}` : ''}`;
+    const body = params ? (isFormData ? params.data : JSON.stringify(params.data)) : undefined;
 
-  return await response.json() as T;
+    const headers: Record<string, string> = {
+        'Authorization': `Bearer ${authToken}`,
+    };
+
+    if (!isFormData) {
+        headers['Content-Type'] = 'application/json';
+    }
+
+    const response = await fetch(url, {
+        method,
+        headers,
+        body: isFormData ? (body as unknown as FormData) : (body as string),
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to ${method.toLowerCase()} ${resource}: ${errorText}`);
+    }
+
+    return await response.json() as T;
 };
 
+
+export const deleteResource = async <T extends RaRecord>(
+    API_URL: string,
+    resource: string,
+    id: number
+  ): Promise<{ data: T }> => {
+    const authToken = localStorage.getItem("authToken");
+  
+    if (!authToken) {
+      throw new Error("Authentication token is missing.");
+    }
+  
+    const url = `${API_URL}/${resource}/${id}`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to delete ${resource}: ${errorText}`);
+    }
+  
+    return { data: (await response.json()) as T };
+  };
+
+// Обробка пагінованого відповіді
 export const processPaginatedResponse = <T extends RaRecord<Identifier>>(
-  response: { json: { content: T[]; totalElements: number } }
-) => {
-  return {
+    response: { json: { content: T[]; totalElements: number } }
+) => ({
     data: response.json.content,
     total: response.json.totalElements,
-  };
-};
+});

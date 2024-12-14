@@ -1,240 +1,150 @@
+/* Основной стиль для всего body */
 body {
-  width: 100%;
+  width:100%;
   height: 100%;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  background-color: #ddbc95; /* Латте – для основного фона */
+}
+
+/* Логин-пейдж */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #b38867; /* Кофе – акцентный фон */
+}
+
+.login-card {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  background-color: #626d71; /* Грифель – для контраста */
+  color: #cdcdc0; /* Керамик – для текста */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.login-title {
+  color: #cdcdc0; /* Керамик – для заголовка */
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.login-input {
+  background-color: #cdcdc0; /* Керамик – для полей ввода */
+  color: #626d71 !important; /* Грифель – для текста в полях */
+  border-radius: 4px;
+}
+
+.login-input:hover {
+  background-color: #ddbc95 !important; /* Латте – при наведении */
+  transform: scale(1.02) !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.login-button {
+  margin-top: 16px;
+  background-color: #626d71 !important; /* Грифель – акцентная кнопка */
+  color: #cdcdc0 !important; /* Керамик – текст на кнопке */
+  padding: 10px;
+  text-transform: none;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #b38867 !important; /* Кофе – акцент при наведении */
+  transform: scale(1.02);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Header and Sidebar */
 .css-lz9mh9-MuiToolbar-root {
-  background-color: #f34a4a;
+  background-color: #434a41;
+}
+.MuiToolbar-root, .MuiToolbar-dense, .RaAppBar-toolbar, .css-lz9mh9-MuiToolbar-root{
+  display: flex;
+}
+.toolbar-actions{
+margin-left: 50vw;
+}
+.css-12i7wg6-MuiPaper-root-MuiDrawer-paper{
+  max-width: 20vw;
+  font-size: 3rem;
+}
+/* .RaLayout-content{
+max-width: 80vw;
+} */
+.css-1ujnqem-MuiTabs-root{
+  background-color: #b38867;
 }
 
-#main-content, 
-a, 
-.css-1h6y07d-MuiList-root-RaMenu-root, 
+#main-content, a, .css-1h6y07d-MuiList-root-RaMenu-root, 
 .RaLayout-contentWithSidebar {
-  background-color: #615049;
-  color: #ffffff !important;
-  padding-top: 15px;
-}
-
-.css-cg7rje-RaShow-root .RaShow-card {
-  background-color: #615049;
+  background-color: #ddbc95; 
+  color: #434a4d !important; 
+  padding-top: 25px;
 }
 
 .MuiSvgIcon-root {
-  color: #ffffff;
-}
-
-/* Спешл Офферс */
-.css-bhp9pd-MuiPaper-root-MuiCard-root,
-.css-1a69w1n-MuiStack-root,
-.css-qmvuda-MuiToolbar-root-RaToolbar-root {
-  background-color: #615049 !important;
-}
-
-.css-11qvwfa-MuiFormLabel-root-MuiInputLabel-root,
-#name-label, 
-#name, 
-.MuiFormControlLabel-label,
-#specialOfferBeers-outlined-label,
-#specialOfferCiders-outlined-label, 
-#specialOfferSnacks-outlined-label, 
-#specialOfferProductBundles-outlined-label {
-  color: #ffffff;
-}
-
-/* AppBar */
-.MuiAppBar-root {
-  align-items: normal;
-  justify-content: space-between;
-  min-width: fit-content;
-  color: #004445;
+  color: #b38867; /* Грифель – иконки */
 }
 
 /* Таблица */
 .css-14mup8f-RaDatagrid-root {
-  background-color: #262f34;
-  padding: 10px;
+  background-color: #b38867; /* Кофе – фон таблицы */
+  padding: 5px;
   box-sizing: border-box;
-  width: 100%;
+  /* width: 100%; */
   max-width: 100%;
-  margin: auto;
   font-size: 24px;
 }
 
-/* Строки и ячейки таблицы */
 .list-common .MuiTableRow-root,
 .list-common .MuiTableCell-root {
-  color: #ffffff;
+  color: #cdcdc0; /* Керамик – текст в таблице */
   text-align: center;
 }
 
 .list-common .RaDatagrid-headerCell {
   font-weight: 500;
-  color: #ffffff !important;
-  background-color: #f34a4a !important;
+  color: #cdcdc0 !important; /* Керамик – заголовок */
+  background-color: #434a41 !important; /* Грифель – фон заголовков */
   text-align: center;
   font-size: 1rem;
-  letter-spacing: 1px;
-}
-
-.list-common .RaTextField-root,
-.list-common .RaNumberField-root {
-  color: #ffffff !important;
-}
-
-.list-common .RaDatagrid-row {
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  border-radius: 15px;
 }
 
 .list-common .RaDatagrid-row:nth-child(even) {
-  background-color: #262f34;
+  background-color: #ddbc95; /* Латте – четные строки */
 }
 
 .list-common .RaDatagrid-row:nth-child(odd) {
-  background-color: #615049;
+  background-color: #b38867; /* Кофе – нечетные строки */
 }
 
 .list-common .RaDatagrid-row:hover {
-  background-color: #021c1e !important;
+  background-color: #626d71 !important; /* Грифель – выделение строки */
   transform: scale(1.02) !important;
-  text-shadow: 0 0 5px #ffffff !important;
+  text-shadow: 0 0 5px #cdcdc0 !important;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
-}
-
-.list-common .RaDatagrid-cell {
-  padding: 12px;
-  text-align: center;
-  vertical-align: middle;
-  letter-spacing: 2px;
-  color: #ffffff !important;
-}
-
-/* Вкладки */
-.list-common .MuiTab-root {
-  background-color: #615049 !important;
-  color: #ffffff !important;
-  border: solid 0.5px #262f34;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5) !important;
-  border-radius: 10px;
-  margin: 5px;
-}
-
-.list-common .Mui-selected {
-  background-color: #f34a4a !important;
-}
-.RaTabbedShowLayout-content{
-min-height: 50vh;
-}
-
-/* Контент в Show Layout */
-.list-common .RaTabbedShowLayout-content {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  width: 100%;
-  height: auto;
-  padding: 5px;
-  background-color: #262f34 !important;
-  color: #ffffff !important;
-  border-radius: 15px;
-  box-sizing: border-box;
-}
-
-/* Изображение */
-.list-common-image .MuiBox-root {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: auto;
-  margin: 20px;
-}
-
-.list-common-image .MuiBox-root img {
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
-  display: block;
-  margin: 0 auto;
-}
-
-.RaImageField-image {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  max-width: 80px;
-  height: auto;
 }
 
 /* Кнопки */
 .MuiButton-root {
-  margin-right: 10px;
   padding: 7px !important;
-  background-color: #f34a4a !important;
-  color: #ffffff !important;
+  background-color: #434a41 !important; /* Грифель – кнопки */
+  color: #cdcdc0 !important; /* Керамик – текст кнопки */
 }
 
-/* Заголовок и кнопка в AppBar */
-.toolbar-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+.MuiButton-root:hover {
+  background-color: #b38867 !important; /* Кофе – при наведении */
 }
 
-.toolbar-title {
-  flex-grow: 1;
-  color: #ffffff;
-  text-align: left;
-}
-
-.toolbar-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.toolbar-actions:hover {
-  background-color: #6fb98f !important;
-  transform: scale(1.02) !important;
-  text-shadow: 0 0 5px #ffffff !important;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* Заголовки */
-.MuiTypography-h6 {
-  color: #ffffff !important;
-  font-weight: 500 !important;
-  font-size: 2rem !important;
-  letter-spacing: 2px;
-}
-
-/* Таблица для Special Offers */
-.table-container-p {
-  color: #7a3b3b;
-  align-items: center;
-  font-size: 20px;
-  font-weight: 700;
-  padding-left: 40%;
-  letter-spacing: 3px;
-}
-
-@media (max-width: 768px) {
-  .list-common .RaDatagrid-root {
-    padding: 10px;
-  }
-
-  .table-container-p {
-    padding-left: 0;
-    text-align: center;
-  }
-}
 
 /* Универсальные стили для изображений */
 /* .list-common-image, 
