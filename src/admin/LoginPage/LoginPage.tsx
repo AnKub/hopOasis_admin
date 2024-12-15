@@ -6,21 +6,27 @@ import authProvider from '../../ShieldAuth/authProvider';
 const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false); // Add loading state
     const navigate = useNavigate();
 
     const handleLogin = async () => {
+        if (!email || !password) {
+            alert('Please fill in both email and password.');
+            return;
+        }
+
+        setLoading(true);
         try {
             await authProvider.login({ email, password });
 
             localStorage.setItem("authToken", "dummy-token");
-            
-            // Если передан onLoginSuccess, вызываем его
             onLoginSuccess?.();
-
             navigate('/');
         } catch (error) {
             console.error('Login failed:', error);
             alert('Login failed. Please check your credentials.');
+        } finally {
+            setLoading(false); // Ensure loading stops after login attempt
         }
     };
 
@@ -39,6 +45,7 @@ const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="login-input"
+                        disabled={loading} // Disable input during loading
                     />
                     <TextField
                         fullWidth
@@ -48,6 +55,7 @@ const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="login-input"
+                        disabled={loading} // Disable input during loading
                     />
                     <Button
                         fullWidth
@@ -55,8 +63,9 @@ const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                         color="primary"
                         onClick={handleLogin}
                         className="login-button"
+                        disabled={loading} // Disable button during loading
                     >
-                        Login
+                        {loading ? 'Logging in...' : 'Login'}
                     </Button>
                 </CardContent>
             </Card>
