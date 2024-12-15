@@ -41,3 +41,4 @@ export const BundleList = (props: ListProps) => (
 			</Datagrid>
 	</List>
 );
+export default BundleList;

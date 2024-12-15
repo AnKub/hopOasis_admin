@@ -29,4 +29,4 @@ export const CiderEdit = (props: EditProps) => (
 					</TabbedForm.Tab>
 			</TabbedForm>
 	</Edit>
-);
+);export default CiderEdit;

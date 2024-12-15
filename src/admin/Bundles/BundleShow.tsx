@@ -31,3 +31,4 @@ export const BundleShow = (props: ShowProps) => (
 			</TabbedShowLayout>
 	</Show>
 );
+export default BundleShow;

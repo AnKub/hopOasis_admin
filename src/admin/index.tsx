@@ -1,47 +1,43 @@
-import { lazy } from "react";
+
 import { Admin, Resource, CustomRoutes } from "react-admin";
 import { Route } from "react-router-dom";
 import authProvider from "../ShieldAuth/authProvider";
 import customProvider from "../api";
-import CustomLayout from "../components/CustomLayout";
 import LoginPage from "./LoginPage/LoginPage";
-// import { Suspense } from 'react';
+
+import BeerList from './Beer/BeerList';
+import BeerCreate from './Beer/BeerCreate';
+import BeerEdit from './Beer/BeerEdit';
+import BeerShow from './Beer/BeerShow';
+
+import SnackList from './Snacks/SnackList';
+import SnackCreate from './Snacks/SnackCreate';
+import SnackEdit from './Snacks/SnackEdit';
+import SnackShow from './Snacks/SnackShow';
+
+import CiderList from './Ciders/CiderList';
+import CiderCreate from './Ciders/CiderCreate';
+import CiderEdit from './Ciders/CiderEdit';
+import CiderShow from './Ciders/CiderShow';
+
+import OfferList from './Offers/OfferList';
+import OfferCreate from './Offers/OfferCreate';
+import OfferEdit from './Offers/OfferEdit';
+import OfferShow from './Offers/OfferShow';
+
+import BundleList from './Bundles/BundleList';
+import BundleCreate from './Bundles/BundleCreate';
+import BundleEdit from './Bundles/BundleEdit';
+import BundleShow from './Bundles/BundleShow';
+
+// import ButtonGroup from '../components/Button';
 
 import './StylesAdmin.css';
-
-const BeerList = lazy(() => import('./Beer/BeerList').then(module => ({ default: module.BeerList })));
-const BeerCreate = lazy(() => import('./Beer/BeerCreate').then(module => ({ default: module.BeerCreate })));
-const BeerEdit = lazy(() => import('./Beer/BeerEdit').then(module => ({ default: module.BeerEdit })));
-const BeerShow = lazy(() => import('./Beer/BeerShow').then(module => ({ default: module.BeerShow })));
-
-const SnackList = lazy(() => import('./Snacks/SnackList').then(module => ({ default: module.SnackList })));
-const SnackCreate = lazy(() => import('./Snacks/SnackCreate').then(module => ({ default: module.SnackCreate })));
-const SnackEdit = lazy(() => import('./Snacks/SnackEdit').then(module => ({ default: module.SnackEdit })));
-const SnackShow = lazy(() => import('./Snacks/SnackShow').then(module => ({ default: module.SnackShow })));
-
-const CiderList = lazy(() => import('./Ciders/CiderList').then(module => ({ default: module.CiderList })));
-const CiderCreate = lazy(() => import('./Ciders/CiderCreate').then(module => ({ default: module.CiderCreate })));
-const CiderEdit = lazy(() => import('./Ciders/CiderEdit').then(module => ({ default: module.CiderEdit })));
-const CiderShow = lazy(() => import('./Ciders/CiderShow').then(module => ({ default: module.CiderShow })));
-
-const OfferList = lazy(() => import('./Offers/OfferList').then(module => ({ default: module.OfferList })));
-const OfferCreate = lazy(() => import('./Offers/OfferCreate').then(module => ({ default: module.OfferCreate })));
-const OfferEdit = lazy(() => import('./Offers/OfferEdit').then(module => ({ default: module.OfferEdit })));
-const OfferShow = lazy(() => import('./Offers/OfferShow').then(module => ({ default: module.OfferShow })));
-
-const BundleList = lazy(() => import('./Bundles/BundleList').then(module => ({ default: module.BundleList })));
-const BundleCreate = lazy(() => import('./Bundles/BundleCreate').then(module => ({ default: module.BundleCreate })));
-const BundleEdit = lazy(() => import('./Bundles/BundleEdit').then(module => ({ default: module.BundleEdit })));
-const BundleShow = lazy(() => import('./Bundles/BundleShow').then(module => ({ default: module.BundleShow })));
-
-const ButtonGroup = lazy(() => import('../components/Button').then(module => ({ default: module.ButtonGroup })));
-
 
 const MyAdmin = () => (
     <Admin
         authProvider={authProvider}
         dataProvider={customProvider}
-        layout={CustomLayout}
         loginPage={(props) => <LoginPage {...props} onLoginSuccess={() => console.log('Login success!')} />}
     >
         <Resource name="beers" list={BeerList} show={BeerShow} edit={BeerEdit} create={BeerCreate} options={{ label: 'Beers' }} />
@@ -51,7 +47,7 @@ const MyAdmin = () => (
         <Resource name="products-bundle" list={BundleList} show={BundleShow} edit={BundleEdit} create={BundleCreate} options={{ label: 'Products Bundle' }} />
         
         <CustomRoutes>
-            <Route path="buttons" element={<ButtonGroup />} />
+            {/* <Route path="buttons" element={<ButtonGroup />} /> */}
             <Route path="/login" element={<LoginPage onLoginSuccess={() => console.log('Login success!')} />} />
         </CustomRoutes>
     </Admin>

@@ -58,4 +58,4 @@ import {
       </SimpleShowLayout>
     </Show>
   );
-  
+  export default OfferShow;

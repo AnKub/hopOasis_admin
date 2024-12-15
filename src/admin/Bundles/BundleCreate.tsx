@@ -47,3 +47,4 @@ export const BundleCreate = (props: CreateProps) => (
 			</TabbedForm>
 	</Create>
 );
+export default BundleCreate;

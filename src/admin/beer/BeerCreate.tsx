@@ -45,4 +45,4 @@ export const BeerCreate = (props: CreateProps) => (
 					</TabbedForm.Tab>
 			</TabbedForm>
 	</Create>
-);
+);export default BeerCreate;

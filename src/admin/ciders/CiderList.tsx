@@ -43,3 +43,4 @@ export const CiderList = (props: ListProps) => (
 			</Datagrid>
 	</List>
 );
+export default CiderList;

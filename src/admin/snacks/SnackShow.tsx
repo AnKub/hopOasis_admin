@@ -31,3 +31,4 @@ export const SnackShow = (props: ShowProps) => (
 		</TabbedShowLayout>
 	</Show>
 );
+export default SnackShow;

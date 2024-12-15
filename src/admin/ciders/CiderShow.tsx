@@ -32,3 +32,4 @@ export const CiderShow = (props: ShowProps) => (
 		</TabbedShowLayout>
 	</Show>
 );
+export default CiderShow;

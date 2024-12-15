@@ -9,7 +9,7 @@ import {
 import { BeerParams } from "../../types";
 import '../StylesAdmin.css';
 
-export const BeerShow = (props: ShowProps) => (
+export  const BeerShow = (props: ShowProps) => (
 	<Show<BeerParams> {...props} className="list-common">
 		<TabbedShowLayout className="list-common">
 			<TabbedShowLayout.Tab label="Information" className="list-common">
@@ -31,4 +31,4 @@ export const BeerShow = (props: ShowProps) => (
 			</TabbedShowLayout.Tab>
 		</TabbedShowLayout>
 	</Show>
-);
+);export default BeerShow;

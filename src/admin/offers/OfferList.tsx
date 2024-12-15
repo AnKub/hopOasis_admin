@@ -16,4 +16,4 @@ export const OfferList = (props: ListProps) => (
       <EditButton className="list-common-edit-button" />
     </Datagrid>
   </List>
-);
+);export default OfferList;

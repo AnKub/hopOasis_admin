@@ -46,3 +46,4 @@ export const SnackCreate = (props: CreateProps) => (
         </TabbedForm>
     </Create>
 );
+export default SnackCreate;

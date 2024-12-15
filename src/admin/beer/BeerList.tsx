@@ -50,3 +50,4 @@ export const BeerList = (props: ListProps) => (
         </Datagrid>
     </List>
 );
+export default BeerList;

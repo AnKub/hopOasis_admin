@@ -30,4 +30,4 @@ export const BeerEdit = (props: EditProps) => (
 					</TabbedForm.Tab>
 			</TabbedForm>
 	</Edit>
-);
+); export default BeerEdit;

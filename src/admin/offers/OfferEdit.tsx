@@ -82,3 +82,4 @@ return (
   </Edit>
 );
 };
+export default OfferEdit;

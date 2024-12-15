@@ -30,3 +30,4 @@ export const SnackEdit = (props: EditProps) => (
         </TabbedForm>
     </Edit>
 );
+export default SnackEdit;

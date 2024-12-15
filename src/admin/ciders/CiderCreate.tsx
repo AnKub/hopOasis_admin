@@ -45,4 +45,4 @@ export const CiderCreate = (props: CreateProps) => (
 					</TabbedForm.Tab>
 			</TabbedForm>
 	</Create>
-);
+); export default CiderCreate;

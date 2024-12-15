@@ -30,3 +30,4 @@ export const BundleEdit = (props: EditProps) => (
 			</TabbedForm>
 	</Edit>
 );
+export default BundleEdit;

@@ -41,3 +41,4 @@ export const SnackList = (props: ListProps) => (
         </Datagrid>
     </List>
 );
+export default SnackList;

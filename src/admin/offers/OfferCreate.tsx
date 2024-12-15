@@ -84,3 +84,4 @@ return (
   </Create>
 );
 };
+export default OfferCreate;
