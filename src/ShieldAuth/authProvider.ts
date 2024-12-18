@@ -5,7 +5,9 @@ const authProvider: AuthProvider = {
         const request = new Request("https://hopoasis.onrender.com/auth/login", {
             method: "POST",
             body: JSON.stringify({ email, password }),
-            headers: new Headers({ "Content-Type": "application/json" }),
+            headers: new Headers({
+                "Content-Type": "application/json",
+            }),
         });
 
         try {
@@ -18,7 +20,7 @@ const authProvider: AuthProvider = {
             localStorage.setItem("authToken", access_token);
         } catch (error) {
             console.error("Login error:", error);
-            throw error;
+            throw new Error("Authentication failed");
         }
     },
 
@@ -28,11 +30,11 @@ const authProvider: AuthProvider = {
     },
 
     checkAuth: () =>
-        localStorage.getItem("authToken") ? Promise.resolve() : Promise.reject(),
+        localStorage.getItem("authToken") ? Promise.resolve() : Promise.reject(new Error("Not authenticated")),
 
     checkError: (error) => {
-        if (error.status === 401 || error.status === 403) {
-            console.warn(`Access denied: ${error.status} error from ${error.url}`);
+        if ([401, 403].includes(error.status)) {
+            localStorage.removeItem("authToken"); // Забезпечуємо видалення токена після помилок доступу
             return Promise.reject();
         }
         return Promise.resolve();

@@ -1,8 +1,8 @@
-import { BeerParams, CiderParams, SnackParams, ProductBundleParams} from './types'; // Добавь путь к твоему файлу с типами
+import { BeerParams, CiderParams, SnackParams, ProductBundleParams } from './types';
 import simpleRestDataProvider from "ra-data-simple-rest";
 import { DataProvider, fetchUtils } from "react-admin";
 import authInterceptor from "./ShieldAuth/authInterceptor";
-import { getImagesUrl, fetchResource} from "./utils";
+import { getImagesUrl, fetchResource } from "./utils";
 
 const API_URL = "https://hopoasis.onrender.com";
 const baseDataProvider = simpleRestDataProvider(API_URL, authInterceptor);
@@ -10,7 +10,7 @@ const baseDataProvider = simpleRestDataProvider(API_URL, authInterceptor);
 export type ResourceData = BeerParams | CiderParams | SnackParams | ProductBundleParams;
 
 export const customProvider: DataProvider = {
-  ...baseDataProvider,
+    ...baseDataProvider,
 
     getList: async (resource, params) => {
         const { page, perPage } = params.pagination;
@@ -41,43 +41,22 @@ export const customProvider: DataProvider = {
     },
 
     create: async (resource, params) => {
-        const isFormData = resource === 'special-offers' || resource === 'snacks' || resource === 'beers' || resource === 'ciders';
-        return fetchResource(API_URL, resource, 'POST', params, isFormData);
+        return fetchResource(API_URL, resource, 'POST', params);
     },
 
     update: async (resource, params) => {
-        const authToken = localStorage.getItem("authToken");
-        if (!authToken) {
-            throw new Error("Authentication token is missing.");
-        }
-    
-        const url = `${API_URL}/${resource}/${params.id}`;
-        const options = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`,
-            },
-            body: JSON.stringify(params.data),
-        };
-    
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(`Failed to update resource: ${response.statusText}`);
-        }
-    
-        const data = await response.json();
-        return { data };
+        return fetchResource(API_URL, resource, 'PUT', params);
     },
-    
 
     delete: async (resource, params) => {
+        const { id } = params;
+        const url = `${API_URL}/${resource}/${id}`;
         const authToken = localStorage.getItem("authToken");
+
         if (!authToken) {
             throw new Error("Authentication token is missing.");
         }
 
-        const url = `${API_URL}/${resource}/${params.id}`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: {

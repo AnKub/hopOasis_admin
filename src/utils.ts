@@ -1,11 +1,6 @@
 import type { CreateParams, UpdateParams, RaRecord, Identifier } from "react-admin";
 import type { OfferParams, SnackParams } from "./types";
 
-// // Функція для отримання токену
-// const getAuthToken = (): string | null => {
-//     return localStorage.getItem("authToken");
-// };
-
 // Функція для формування URL для зображень
 export const getImagesUrl = (
     imagesName: string[],
@@ -17,8 +12,8 @@ export const getImagesUrl = (
         return [];
     }
     return imagesName.map((image) => {
-        return image.startsWith("http://") || image.startsWith("https://") 
-            ? image 
+        return image.startsWith("http://") || image.startsWith("https://")
+            ? image
             : `${url}/${resource}/images/${image}`;
     });
 };
@@ -48,60 +43,59 @@ export const fetchResource = async <T extends RaRecord<Identifier>>(
     method: 'POST' | 'PUT',
     params?: UpdateParams<T> | CreateParams<T>
 ): Promise<T> => {
-    const authToken = localStorage.getItem("authToken"); // Получаем токен
-
+    const authToken = localStorage.getItem("authToken");
     if (!authToken) {
         throw new Error("Authentication token is missing.");
     }
 
     const url = `${API_URL}/${resource}${params && 'id' in params ? `/${params.id}` : ''}`;
-    const body = params ? JSON.stringify(params.data) : undefined; // Формируем тело запроса
+    const body = params?.data ? JSON.stringify(params.data) : undefined;
 
     const response = await fetch(url, {
         method,
         headers: {
-            'Authorization': `Bearer ${authToken}`, // Добавляем токен
-            'Content-Type': 'application/json', // Указываем корректный тип контента
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
         },
         body,
     });
-
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to ${method.toLowerCase()} ${resource}: ${errorText}`);
+        const errorDetails = await response.text();
+        throw new Error(`Error during ${method} request to ${resource}: ${errorDetails}`);
     }
-
-    return await response.json() as T; // Возвращаем JSON-ответ
+    return response.json() as Promise<T>;
 };
 
+
+// Видалення ресурсу
 export const deleteResource = async <T extends RaRecord>(
     API_URL: string,
     resource: string,
     id: number
-  ): Promise<{ data: T }> => {
+): Promise<{ data: T }> => {
     const authToken = localStorage.getItem("authToken");
-  
+
     if (!authToken) {
-      throw new Error("Authentication token is missing.");
+        throw new Error("Authentication token is missing.");
     }
-  
+
     const url = `${API_URL}/${resource}/${id}`;
     const response = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${authToken}`,
+        },
     });
-  
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to delete ${resource}: ${errorText}`);
-    }
-  
-    return { data: (await response.json()) as T };
-  };
 
-// Обробка пагінованого відповіді
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to delete ${resource}: ${errorText}`);
+    }
+
+    return { data: (await response.json()) as T };
+};
+
+// Обробка пагінованої відповіді
 export const processPaginatedResponse = <T extends RaRecord<Identifier>>(
     response: { json: { content: T[]; totalElements: number } }
 ) => ({
