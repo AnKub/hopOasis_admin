@@ -2,7 +2,7 @@ import { AuthProvider } from "react-admin";
 
 const authProvider: AuthProvider = {
     login: async ({ email, password }) => {
-        const request = new Request("https://friendly-feynma-1-0.onrender.com/auth/login", {
+        const request = new Request("https://hopoasis.onrender.com/auth/login", {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: new Headers({ "Content-Type": "application/json" }),

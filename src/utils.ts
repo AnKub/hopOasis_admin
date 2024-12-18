@@ -46,30 +46,24 @@ export const fetchResource = async <T extends RaRecord<Identifier>>(
     API_URL: string,
     resource: string,
     method: 'POST' | 'PUT',
-    params?: UpdateParams<T> | CreateParams<T>,
-    isFormData: boolean = false
+    params?: UpdateParams<T> | CreateParams<T>
 ): Promise<T> => {
-    const authToken = localStorage.getItem("authToken");
+    const authToken = localStorage.getItem("authToken"); // Получаем токен
 
     if (!authToken) {
         throw new Error("Authentication token is missing.");
     }
 
     const url = `${API_URL}/${resource}${params && 'id' in params ? `/${params.id}` : ''}`;
-    const body = params ? (isFormData ? params.data : JSON.stringify(params.data)) : undefined;
-
-    const headers: Record<string, string> = {
-        'Authorization': `Bearer ${authToken}`,
-    };
-
-    if (!isFormData) {
-        headers['Content-Type'] = 'application/json';
-    }
+    const body = params ? JSON.stringify(params.data) : undefined; // Формируем тело запроса
 
     const response = await fetch(url, {
         method,
-        headers,
-        body: isFormData ? (body as unknown as FormData) : (body as string),
+        headers: {
+            'Authorization': `Bearer ${authToken}`, // Добавляем токен
+            'Content-Type': 'application/json', // Указываем корректный тип контента
+        },
+        body,
     });
 
     if (!response.ok) {
@@ -77,9 +71,8 @@ export const fetchResource = async <T extends RaRecord<Identifier>>(
         throw new Error(`Failed to ${method.toLowerCase()} ${resource}: ${errorText}`);
     }
 
-    return await response.json() as T;
+    return await response.json() as T; // Возвращаем JSON-ответ
 };
-
 
 export const deleteResource = async <T extends RaRecord>(
     API_URL: string,
