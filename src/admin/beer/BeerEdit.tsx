@@ -1,10 +1,10 @@
 import {
 	Edit,
-	NumberInput,
 	TabbedForm,
 	TextInput,
 	EditProps,
 } from "react-admin";
+import OptionsField from "../OptionsField/OptionFields";
 
 export const BeerEdit = (props: EditProps) => (
 	<Edit {...props} className="list-common">
@@ -13,10 +13,14 @@ export const BeerEdit = (props: EditProps) => (
 							<TextInput source="beerName" label="Name" variant="outlined" size="medium" className="list-common" />
 					</TabbedForm.Tab>
 					<TabbedForm.Tab label="Price and Volume" className="list-common">
-							<NumberInput source="options[0]?.price" label="Price Option 1" variant="outlined" size="medium" className="list-common" />
-							<NumberInput source="options[0]?.volume" label="Volume Option 1" variant="outlined" size="medium" className="list-common" />
-							<NumberInput source="options[1]?.price" label="Price Option 2" variant="outlined" size="medium" className="list-common" />
-							<NumberInput source="options[1]?.volume" label="Volume Option 2" variant="outlined" size="medium" className="list-common" />
+							<OptionsField
+									optionsSource="options"
+									fields={[
+											{ key: 'price', label: 'Price' },
+											{ key: 'volume', label: 'Volume' },
+											{ key: 'quantity', label: 'Quantity' },
+									]}
+							/>
 					</TabbedForm.Tab>
 					<TabbedForm.Tab label="Description" className="list-common">
 							<TextInput

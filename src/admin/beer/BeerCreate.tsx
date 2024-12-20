@@ -4,10 +4,10 @@ import {
 	ImageInput,
 	TabbedForm,
 	TextInput,
-	NumberInput,
 	required,
 	CreateProps,
 } from "react-admin";
+import OptionsField from "../OptionsField/OptionFields";
 import { BeerParams } from "../../types";
 
 export const BeerCreate = (props: CreateProps) => (
@@ -17,10 +17,14 @@ export const BeerCreate = (props: CreateProps) => (
 							<TextInput source="beerName" label="Name" validate={[required()]} className="list-common" />
 					</TabbedForm.Tab>
 					<TabbedForm.Tab label="Price and Volume" className="list-common">
-		<NumberInput source="options[0]?.price" label="Price Option 1" validate={[required()]} className="list-common" />
-							<NumberInput source="options[0]?.volume" label="Volume Option 1" validate={[required()]} className="list-common" />
-							<NumberInput source="options[1]?.price" label="Price Option 2" validate={[required()]} className="list-common" />
-							<NumberInput source="options[1]?.volume" label="Volume Option 2" validate={[required()]} className="list-common" />
+							<OptionsField
+									optionsSource="options"
+									fields={[
+											{ key: 'price', label: 'Price' },
+											{ key: 'volume', label: 'Volume' },
+											{ key: 'quantity', label: 'Quantity' },
+									]}
+							/>
 					</TabbedForm.Tab>
 					<TabbedForm.Tab label="Description" className="list-common">
 							<TextInput
