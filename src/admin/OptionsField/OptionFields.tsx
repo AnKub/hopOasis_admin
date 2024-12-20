@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrayInput, SimpleFormIterator, NumberInput } from 'react-admin';
 
 interface OptionsFieldProps {
-    optionsSource: string; 
+    // optionsSource: string; 
     fields: { key: string; label: string }[]; 
 }
 
