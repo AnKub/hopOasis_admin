@@ -2,7 +2,7 @@ import { Identifier } from 'react-admin';
 
 export type ProductOption = {
   id: Identifier;
-  productId: Identifier;  // Added productId to link options to the correct product
+  productId: Identifier;  
   quantity: number;
   price: number;
 };

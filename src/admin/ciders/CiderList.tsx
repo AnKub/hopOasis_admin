@@ -17,7 +17,7 @@ export const CiderList = (props: ListProps) => (
 					<TextField source="ciderName" label="Name" className="list-common" />
 					<NumberField source="averageRating" label="Average Rating" className="list-common" />
 					<NumberField source="ratingCount" label="Rating Count" className="list-common" />
-					{/* options */}
+	
 					<NumberField
 							source="options[0]?.volume"
 							label="Volume Option 1"

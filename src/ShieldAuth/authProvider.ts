@@ -15,12 +15,11 @@ const authProvider: AuthProvider = {
                 {
                     method: "POST",
                     body: requestBody,
-                    headers: headers,  // Используем экземпляр Headers
+                    headers: headers,  
                 }
             );
 
-            // Теперь правильно извлекаем токен из ответа
-            const { access_token } = await response.json();
+        const { access_token } = await response.json();
 
             if (access_token) {
                 localStorage.setItem("authToken", access_token);
@@ -31,8 +30,7 @@ const authProvider: AuthProvider = {
         } catch (error: unknown) {
             console.error("Login failed:", error);
 
-            // Проверяем, является ли error экземпляром Error, и извлекаем message
-            if (error instanceof Error) {
+       if (error instanceof Error) {
                 throw new Error(`Login failed: ${error.message}`);
             } else {
                 throw new Error("Login failed: Unknown error");

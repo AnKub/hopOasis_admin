@@ -12,7 +12,6 @@ import {
 import { Typography } from '@mui/material';
 
 export const OfferCreate = (props: CreateProps) => {
-// Используем хук для получения списка продуктов (пиво, сидр и т.д.)
 const { data: beers, isLoading: loadingBeers } = useGetList('beers');
 const { data: ciders, isLoading: loadingCiders } = useGetList('ciders');
 const { data: snacks, isLoading: loadingSnacks } = useGetList('snacks');

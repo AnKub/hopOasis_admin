@@ -16,7 +16,7 @@ export const BundleList = (props: ListProps) => (
 					<TextField source="name" label="Name" className="list-common" />
 					<NumberField source="averageRating" label="Average Rating" className="list-common" />
 					<NumberField source="ratingCount" label="Rating Count" className="list-common" />
-					{/* Работа с массивом options */}
+					{/*с массивом options */}
 					<NumberField
 							source="options[0]?.quantity"
 							label="Quantity Option 1"

@@ -26,7 +26,6 @@ export const CiderShow = (props: ShowProps) => (
 							<TextField source="description" className="list-common" />
 					</TabbedShowLayout.Tab>
 					<TabbedShowLayout.Tab label="Images" className="list-common">
-							{/* Работа с массивом изображений */}
 				<ImageField source="ciderImageName[0]" label="Image Option 1" className="list-common-image" />
 			</TabbedShowLayout.Tab>
 		</TabbedShowLayout>

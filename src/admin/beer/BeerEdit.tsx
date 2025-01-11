@@ -12,7 +12,7 @@ export const BeerEdit = (props: EditProps) => (
           optionsSource="options" 
           fields={[
             { key: 'id', label: 'ID' },
-            { key: 'productId', label: 'Product ID' }, // Added productId field
+            { key: 'productId', label: 'Product ID' }, 
             { key: 'price', label: 'Price' },
             { key: 'volume', label: 'Volume' },
             { key: 'quantity', label: 'Quantity' },
