@@ -1,104 +1,39 @@
-import type { CreateParams, UpdateParams, RaRecord, Identifier } from "react-admin";
-import type { OfferParams, SnackParams } from "./types";
+import { fetchUtils } from "react-admin";
+import { CreateParams, UpdateParams, RaRecord, Identifier } from "react-admin";
+import { CustomImage } from './types';
 
-// Функція для формування URL для зображень
-export const getImagesUrl = (
-    imagesName: string[],
-    url: string,
-    resource: string
-): string[] => {
-    if (!Array.isArray(imagesName)) {
-        console.error("Expected an array of image names, but received:", imagesName);
-        return [];
-    }
-    return imagesName.map((image) => {
-        return image.startsWith("http://") || image.startsWith("https://")
-            ? image
-            : `${url}/${resource}/images/${image}`;
-    });
+export const getImagesUrl = (imageNames: CustomImage[], baseUrl: string, resource: string) => {
+    return imageNames.map(imageName => `${baseUrl}/${resource}/images/${imageName}`);
 };
 
-// Створення FormData для пропозиції
-export const createOfferFormData = (params: CreateParams<OfferParams>): FormData => {
-    const formData = new FormData();
-    Object.entries(params.data).forEach(([key, value]) => {
-        if (value !== undefined) formData.append(key, JSON.stringify(value));
-    });
-    return formData;
-};
-
-// Створення FormData для перекусів
-export const createSnackFormData = (params: CreateParams<SnackParams>): FormData => {
-    const formData = new FormData();
-    Object.entries(params.data).forEach(([key, value]) => {
-        if (value !== undefined) formData.append(key, String(value));
-    });
-    return formData;
-};
-
-// Функція для виконання запитів до ресурсів
 export const fetchResource = async <T extends RaRecord<Identifier>>(
     API_URL: string,
     resource: string,
-    method: 'POST' | 'PUT',
+    method: "POST" | "PUT",
     params?: UpdateParams<T> | CreateParams<T>
 ): Promise<T> => {
-    const authToken = localStorage.getItem("authToken");
-    if (!authToken) {
-        throw new Error("Authentication token is missing.");
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+        throw new Error("Missing token");
     }
 
-    const url = `${API_URL}/${resource}${params && 'id' in params ? `/${params.id}` : ''}`;
-    const body = params?.data ? JSON.stringify(params.data) : undefined;
-
-    const response = await fetch(url, {
+    const url = `${API_URL}/${resource}${params && "id" in params ? `/${params.id}` : ""}`;
+    
+    const options: fetchUtils.Options = {
         method,
-        headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-        },
-        body,
-    });
-    if (!response.ok) {
-        const errorDetails = await response.text();
-        throw new Error(`Error during ${method} request to ${resource}: ${errorDetails}`);
+        body: JSON.stringify(params?.data || {}),
+        headers: new Headers({
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        }),
+    };
+
+    try {
+        const response = await fetchUtils.fetchJson(url, options);
+        return response.json;
+    } catch (error) {
+        console.error(`Error in fetchResource: ${error}`);
+        throw new Error(`Failed to ${method} resource`);
     }
-    return response.json() as Promise<T>;
 };
-
-
-// Видалення ресурсу
-export const deleteResource = async <T extends RaRecord>(
-    API_URL: string,
-    resource: string,
-    id: number
-): Promise<{ data: T }> => {
-    const authToken = localStorage.getItem("authToken");
-
-    if (!authToken) {
-        throw new Error("Authentication token is missing.");
-    }
-
-    const url = `${API_URL}/${resource}/${id}`;
-    const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${authToken}`,
-        },
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to delete ${resource}: ${errorText}`);
-    }
-
-    return { data: (await response.json()) as T };
-};
-
-// Обробка пагінованої відповіді
-export const processPaginatedResponse = <T extends RaRecord<Identifier>>(
-    response: { json: { content: T[]; totalElements: number } }
-) => ({
-    data: response.json.content,
-    total: response.json.totalElements,
-});

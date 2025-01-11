@@ -1,27 +1,32 @@
-export type CustomImage = string;
+import { Identifier } from 'react-admin';
 
 export type ProductOption = {
-  id: number;
+  id: Identifier;
+  productId: Identifier;  // Added productId to link options to the correct product
   quantity: number;
   price: number;
 };
 
+export interface CustomImage {
+  url: string;
+  name: string;
+}
+
 export type VolumeOption = ProductOption & { volume: number };
-export type WeightOption = ProductOption & { weight: number };
+export type WeightOption = ProductOption & { volume: number };
 
 export type BaseParams = {
-  id: number;
+  id: Identifier;
   description: string;
   averageRating: number;
   ratingCount: number;
-  specialOfferIds: number[];
+  specialOfferIds: Identifier[];
   imageName?: CustomImage[];
 };
 
 export type BeerParams = BaseParams & {
   beerName: string;
   beerColor: string;
-  imageName: CustomImage[];
   itemType: 'BEER';
   options: VolumeOption[];
 };
@@ -45,39 +50,4 @@ export type ProductBundleParams = BaseParams & {
   productImageName: CustomImage[];
   itemType: 'PRODUCT_BUNDLE';
   options: ProductOption[];
-};
-
-export type OfferParams = {
-  id: number;
-  name: string;
-  active: boolean;
-  specialOfferBeers: BeerParams[];
-  specialOfferCiders: CiderParams[];
-  specialOfferSnacks: SnackParams[];
-  specialOfferProductBundles: ProductBundleParams[];
-};
-
-export type ResourceEntity =
-  | BeerParams
-  | CiderParams
-  | SnackParams
-  | ProductBundleParams
-  | OfferParams;
-
-export type ListParams<T> = {
-  data: T[];
-  total: number;
-};
-
-export type OneParams<T> = {
-  data: T;
-};
-
-export type DeleteParams<T> = {
-  id: number;
-  previousData?: T;
-};
-
-export type DeleteResult<T> = {
-  data: T;
 };

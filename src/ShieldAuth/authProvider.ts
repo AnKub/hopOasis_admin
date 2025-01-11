@@ -1,26 +1,42 @@
 import { AuthProvider } from "react-admin";
+import { fetchUtils } from "react-admin";
 
 const authProvider: AuthProvider = {
     login: async ({ email, password }) => {
-        const request = new Request("https://hopoasis.onrender.com/auth/login", {
-            method: "POST",
-            body: JSON.stringify({ email, password }),
-            headers: new Headers({
-                "Content-Type": "application/json",
-            }),
-        });
+        const requestBody = JSON.stringify({ email, password });
 
         try {
-            const response = await fetch(request);
-            if (!response.ok) {
-                throw new Error("Failed to login");
-            }
+            const headers = new Headers({
+                "Content-Type": "application/json",
+            });
 
+            const response = await fetchUtils.fetchJson(
+                "https://hopoasis.onrender.com/auth/login",
+                {
+                    method: "POST",
+                    body: requestBody,
+                    headers: headers,  // Используем экземпляр Headers
+                }
+            );
+
+            // Теперь правильно извлекаем токен из ответа
             const { access_token } = await response.json();
-            localStorage.setItem("authToken", access_token);
-        } catch (error) {
-            console.error("Login error:", error);
-            throw new Error("Authentication failed");
+
+            if (access_token) {
+                localStorage.setItem("authToken", access_token);
+                return { access_token };
+            } else {
+                throw new Error("Token is missing");
+            }
+        } catch (error: unknown) {
+            console.error("Login failed:", error);
+
+            // Проверяем, является ли error экземпляром Error, и извлекаем message
+            if (error instanceof Error) {
+                throw new Error(`Login failed: ${error.message}`);
+            } else {
+                throw new Error("Login failed: Unknown error");
+            }
         }
     },
 
@@ -30,15 +46,21 @@ const authProvider: AuthProvider = {
     },
 
     checkAuth: () =>
-        localStorage.getItem("authToken") ? Promise.resolve() : Promise.reject(new Error("Not authenticated")),
+        localStorage.getItem("authToken")
+            ? Promise.resolve()
+            : Promise.reject(new Error("Not authenticated")),
 
-    checkError: (error) => {
-        if ([401, 403].includes(error.status)) {
-            localStorage.removeItem("authToken"); // Забезпечуємо видалення токена після помилок доступу
-            return Promise.reject();
-        }
-        return Promise.resolve();
-    },
+            checkError: (error) => {
+                const status = error.response?.status;
+                if ([401, 403].includes(status)) {
+                    localStorage.removeItem("authToken");
+                    return Promise.reject();
+                } else if (status === 500) {
+                    console.error("Server error: ", error.message);
+                    return Promise.reject(new Error("Internal Server Error"));
+                }
+                return Promise.resolve();
+            },
 
     getPermissions: () => Promise.resolve(),
 };

@@ -6,7 +6,8 @@ import authProvider from '../../ShieldAuth/authProvider';
 const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false); // Add loading state
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const handleLogin = async () => {
@@ -16,17 +17,28 @@ const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
         }
 
         setLoading(true);
+        setErrorMessage(null);
         try {
             await authProvider.login({ email, password });
 
-            localStorage.setItem("authToken", "dummy-token");
-            onLoginSuccess?.();
-            navigate('/');
+            const token = localStorage.getItem("authToken"); 
+            if (token) {
+                onLoginSuccess?.();
+                navigate('/'); 
+            } else {
+                throw new Error("Token is missing"); 
+            }
         } catch (error) {
             console.error('Login failed:', error);
-            alert('Login failed. Please check your credentials.');
+
+            // Добавляем более информативную ошибку
+            if (error instanceof Error) {
+                setErrorMessage(error.message); // Отображаем ошибку, которая приходит с бэкенда
+            } else {
+                setErrorMessage('Login failed. Please check your credentials.');
+            }
         } finally {
-            setLoading(false); // Ensure loading stops after login attempt
+            setLoading(false); // Завершаем загрузку
         }
     };
 
@@ -45,7 +57,7 @@ const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="login-input"
-                        disabled={loading} // Disable input during loading
+                        disabled={loading}
                     />
                     <TextField
                         fullWidth
@@ -55,15 +67,20 @@ const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="login-input"
-                        disabled={loading} // Disable input during loading
+                        disabled={loading}
                     />
+                    {errorMessage && (
+                        <Typography color="error" variant="body2" gutterBottom>
+                            {errorMessage}
+                        </Typography>
+                    )}
                     <Button
                         fullWidth
                         variant="contained"
                         color="primary"
                         onClick={handleLogin}
                         className="login-button"
-                        disabled={loading} // Disable button during loading
+                        disabled={loading}
                     >
                         {loading ? 'Logging in...' : 'Login'}
                     </Button>

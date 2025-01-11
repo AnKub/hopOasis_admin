@@ -38,8 +38,7 @@ const MyAdmin = () => (
     <Admin
         authProvider={authProvider}
         dataProvider={customProvider}
-        loginPage={(props) => <LoginPage {...props} onLoginSuccess={() => console.log('Login success!')} />}
-    >
+        loginPage={(props) => <LoginPage {...props} onLoginSuccess={() => console.log('Login success!')} />}>
         <Resource name="beers" list={BeerList} show={BeerShow} edit={BeerEdit} create={BeerCreate} options={{ label: 'Beers' }} />
         <Resource name="snacks" list={SnackList} show={SnackShow} edit={SnackEdit} create={SnackCreate} options={{ label: 'Snacks' }} />
         <Resource name="ciders" list={CiderList} show={CiderShow} edit={CiderEdit} create={CiderCreate} options={{ label: 'Ciders' }} />
@@ -47,7 +46,6 @@ const MyAdmin = () => (
         <Resource name="products-bundle" list={BundleList} show={BundleShow} edit={BundleEdit} create={BundleCreate} options={{ label: 'Products Bundle' }} />
         
         <CustomRoutes>
-            {/* <Route path="buttons" element={<ButtonGroup />} /> */}
             <Route path="/login" element={<LoginPage onLoginSuccess={() => console.log('Login success!')} />} />
         </CustomRoutes>
     </Admin>

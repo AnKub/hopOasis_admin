@@ -1,11 +1,12 @@
-import { BeerParams, CiderParams, SnackParams, ProductBundleParams } from './types';
-import simpleRestDataProvider from "ra-data-simple-rest";
-import { DataProvider, fetchUtils } from "react-admin";
-import authInterceptor from "./ShieldAuth/authInterceptor";
+import { DataProvider } from "react-admin";
+import { fetchUtils } from "react-admin";
 import { getImagesUrl, fetchResource } from "./utils";
+import simpleRestDataProvider from 'ra-data-simple-rest';
+import { BeerParams, CiderParams, ProductBundleParams, SnackParams } from "./types";
 
 const API_URL = "https://hopoasis.onrender.com";
-const baseDataProvider = simpleRestDataProvider(API_URL, authInterceptor);
+
+const baseDataProvider = simpleRestDataProvider(API_URL);
 
 export type ResourceData = BeerParams | CiderParams | SnackParams | ProductBundleParams;
 
@@ -17,35 +18,79 @@ export const customProvider: DataProvider = {
         const { field, order } = params.sort;
 
         const url = `${API_URL}/${resource}?_page=${page}&_limit=${perPage}&_sort=${field}&_order=${order}`;
-        const response = await fetchUtils.fetchJson(url);
+        try {
+            const response = await fetchUtils.fetchJson(url);
+            const processedData =
+                ["snacks", "beers", "ciders", "products-bundle"].includes(resource) &&
+                Array.isArray(response.json.content)
+                    ? response.json.content.map((item: ResourceData) => ({
+                        ...item,
+                        imageName: getImagesUrl(item.imageName || [], API_URL, resource),
+                    }))
+                    : response.json;
 
-        const processedData =
-            ["snacks", "beers", "ciders", "products-bundle"].includes(resource) &&
-            Array.isArray(response.json.content)
-                ? response.json.content.map((item: ResourceData) => ({
-                    ...item,
-                    imageName: getImagesUrl(item.imageName || [], API_URL, resource),
-                }))
-                : response.json;
-
-        return {
-            data: processedData,
-            total: response.json.totalElements || processedData.length,
-        };
+            return {
+                data: processedData,
+                total: response.json.totalElements || processedData.length,
+            };
+        } catch (error) {
+            console.error("Error fetching list:", error);
+            throw new Error("Error fetching list");
+        }
     },
 
     getOne: async (resource, params) => {
         const url = `${API_URL}/${resource}/${params.id}`;
-        const response = await fetchUtils.fetchJson(url);
-        return { data: response.json };
+        try {
+            const response = await fetchUtils.fetchJson(url);
+            return { data: response.json };
+        } catch (error) {
+            console.error("Error fetching one:", error);
+            throw new Error("Error fetching one");
+        }
     },
 
     create: async (resource, params) => {
+        if (resource === "beers") {
+            if (!params.data.options || !Array.isArray(params.data.options)) {
+                throw new Error("Options must be an array.");
+            }
+
+            params.data.options = params.data.options.map((option: { id?: number }) => ({
+                ...option,
+                id: option.id || Math.random(),
+            }));
+        }
+
         return fetchResource(API_URL, resource, 'POST', params);
     },
 
     update: async (resource, params) => {
-        return fetchResource(API_URL, resource, 'PUT', params);
+        const { id, data } = params;
+        const url = `${API_URL}/${resource}/${id}`;
+        const authToken = localStorage.getItem("authToken");
+
+        if (!authToken) {
+            throw new Error("Authentication token is missing.");
+        }
+
+        const headers = new Headers({
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+        });
+
+        try {
+            const response = await fetchUtils.fetchJson(url, {
+                method: "PUT",
+                body: JSON.stringify(data),
+                headers,
+            });
+
+            return { data: response.json };
+        } catch (error) {
+            console.error("Error updating resource:", error);
+            throw new Error(`Failed to update resource: ${error}`);
+        }
     },
 
     delete: async (resource, params) => {
@@ -57,19 +102,19 @@ export const customProvider: DataProvider = {
             throw new Error("Authentication token is missing.");
         }
 
-        const response = await fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${authToken}`,
-            },
-        });
+        try {
+            const response = await fetchUtils.fetchJson(url, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                },
+            });
 
-        if (!response.ok) {
-            throw new Error(`Failed to delete resource: ${response.statusText}`);
+            return { data: response.json || { id } };
+        } catch (error) {
+            console.error("Error deleting resource:", error);
+            throw new Error(`Failed to delete resource: ${error}`);
         }
-
-        const data = await response.json();
-        return { data };
     },
 };
 

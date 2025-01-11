@@ -20,6 +20,7 @@ export const CiderCreate = (props: CreateProps) => (
 						<OptionsField
 								optionsSource="options"
 								fields={[
+									{ key: 'id', label: 'ID' },
 										{ key: 'price', label: 'Price' },
 										{ key: 'volume', label: 'Volume' },
 										{ key: 'quantity', label: 'Quantity' },

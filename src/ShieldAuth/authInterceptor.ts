@@ -1,45 +1,27 @@
-import axios from "axios";
 import { fetchUtils } from "react-admin";
 
 const authInterceptor = async (url: string, options: fetchUtils.Options = {}) => {
-    const { method = "GET" } = options;
     const token = localStorage.getItem("authToken");
-    console.log(token);
-    const useAuth = ["POST", "PUT", "DELETE"].includes(method);
 
-    const headers = new Headers({
-        ...options.headers,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...(useAuth && token ? { Authorization: `Bearer ${token}` } : {}),
-    });
+    if (!token) {
+        throw new Error("No auth token found. Please log in.");
+    }
+
+    if (options.method !== 'GET') {
+        const headers = new Headers(options.headers || {});
+        headers.append("Authorization", `Bearer ${token}`);
+        headers.append("Accept", "application/json");
+        headers.append("Content-Type", "application/json");
+
+        options.headers = headers;
+    }
 
     try {
-        const response = await axios({
-            url,
-            method,
-            headers: Object.fromEntries(headers.entries()),
-            data: options.body || null,
-        });
-
-        return {
-            status: response.status,
-            headers: new Headers(Object.entries(response.headers || {}).map(([key, value]) => [key, String(value)])),
-            body: JSON.stringify(response.data),
-            json: response.data,
-        };
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            console.error("Interceptor error:", error.message);
-            throw new Error(error.message);
-        } else if (typeof error === "object" && error !== null && "response" in error) {
-            const responseError = error as { response: { data: { message: string } } };
-            console.error("Interceptor error:", responseError.response.data);
-            throw new Error(responseError.response.data.message || "Request failed");
-        } else {
-            console.error("Unknown error:", error);
-            throw new Error("Request failed");
-        }
+        const response = await fetchUtils.fetchJson(url, options);
+        return response;
+    } catch (error) {
+        console.error("Error in authInterceptor:", error);
+        throw new Error("Network or server error occurred.");
     }
 };
 

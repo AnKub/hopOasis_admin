@@ -20,6 +20,7 @@ export const SnackCreate = (props: CreateProps) => (
                 <OptionsField
                     optionsSource="options"
                     fields={[
+                        { key: 'id', label: 'ID' },
                         { key: 'price', label: 'Price' },
                         { key: 'weight', label: 'Weight' },
                         { key: 'quantity', label: 'Quantity' },
