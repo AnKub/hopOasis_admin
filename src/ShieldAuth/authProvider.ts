@@ -19,7 +19,7 @@ const authProvider: AuthProvider = {
                 }
             );
 
-        const { access_token } = await response.json();
+        const { access_token } = await response.json;
 
             if (access_token) {
                 localStorage.setItem("authToken", access_token);
