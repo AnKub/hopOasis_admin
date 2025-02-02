@@ -1,6 +1,6 @@
 import { DataProvider } from "react-admin";
 import { fetchUtils } from "react-admin";
-import { getImagesUrl, fetchResource } from "./utils";
+import { getImagesUrl} from "./utils";
 import simpleRestDataProvider from 'ra-data-simple-rest';
 import { BeerParams, CiderParams, ProductBundleParams, SnackParams } from "./types";
 
@@ -50,19 +50,35 @@ export const customProvider: DataProvider = {
         }
     },
 
+ 
     create: async (resource, params) => {
-        if (resource === "beers") {
-            if (!params.data.options || !Array.isArray(params.data.options)) {
-                throw new Error("Options must be an array.");
-            }
+        console.log(`Creating resource: ${resource}`, params.data);
 
-            params.data.options = params.data.options.map((option: { id?: number }) => ({
-                ...option,
-                id: option.id || Math.random(),
-            }));
+        // Видаляємо id, щоб сервер сам його створив
+        const dataWithoutId = { ...params.data };
+        delete dataWithoutId.id;
+
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+            throw new Error("Authentication token is missing.");
         }
 
-        return fetchResource(API_URL, resource, 'POST', params);
+        try {
+            const response = await fetchUtils.fetchJson(`${API_URL}/${resource}`, {
+                method: "POST",
+                body: JSON.stringify(dataWithoutId),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`,
+                }),
+            });
+            console.log("Server full response:", response);
+            console.log("Created successfully:", response.json);
+            return { data: response.json };
+        } catch (error) {
+            console.error("Error creating resource:", error);
+            throw new Error("Failed to create resource.");
+        }
     },
 
     update: async (resource, params) => {
@@ -107,6 +123,7 @@ export const customProvider: DataProvider = {
                 method: "DELETE",
                 headers: {
                     'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
                 },
             });
 
