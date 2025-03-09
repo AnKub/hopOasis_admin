@@ -1,31 +1,54 @@
-# hopOasis_admin
-# React + TypeScript + Vite
+# 🛍 HopOasis Admin Panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Project Overview
+This is the **administrative panel** for the HopOasis online store, developed as part of a team challenge. The project is built with **React Admin** and provides functionality for managing products, orders, and users.
 
-Currently, two official plugins are available:
+## 📌 Key Technologies
+- ⚛ **React Admin** – Admin panel framework
+- 🔗 **React Router** – Navigation and routing
+- 📦 **Axios** – API requests
+- 🛠 **TypeScript** – Strongly-typed JavaScript
+- 🚀 **Vite** – Development and build tool
+- 📊 **ra-data-simple-rest** – RESTful data provider for React Admin
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## 📂 Project Structure
+```plaintext
+📦 hopoasis-admin
+ ┣ 📂 src
+ ┃ ┣ 📂 components   # Reusable UI components
+ ┃ ┣ 📂 pages        # Admin pages (Products, Orders, Users, etc.)
+ ┃ ┣ 📂 dataProvider # API handling with ra-data-simple-rest
+ ┃ ┣ 📂 styles       # Global styles
+ ┃ ┗ 📜 App.tsx      # Main component
+ ┣ 📜 package.json   # Project dependencies & scripts
+ ┗ 📜 README.md      # Project documentation
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## 🛠 Running the Project
+1. Install dependencies:
+   ```sh
+   npm install
+   ```
+2. Start the development server:
+   ```sh
+   npm run dev
+   ```
+3. Build for production:
+   ```sh
+   npm run build
+   ```
+4. Preview the build:
+   ```sh
+   npm run preview
+   ```
+
+## 🌟 Features
+✅ Product management (Add, Edit, Delete, List view)<br>
+✅ Order tracking and management<br>
+✅ User administration (Roles & Permissions)<br>
+✅ API interaction via Axios & REST API<br>
+✅ TypeScript support for better code maintainability<br>
+✅ Optimized for performance with Vite
+
+
+
